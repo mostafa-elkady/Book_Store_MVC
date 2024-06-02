@@ -1,0 +1,13 @@
+﻿@model Category
+@{
+    ViewData["Title"] = "Update";
+    ViewData["ButtonText"] = "Update";
+}
+
+<partial name="_CreateUpdatePartialView" model="Model" />
+<!--  To Add Client Side Validation [  Important ]-->
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

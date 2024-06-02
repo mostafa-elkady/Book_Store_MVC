@@ -1,0 +1,35 @@
+﻿@model Category
+<div class=" card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class=" row">
+            <div class="col-12 text-center">
+                <h2 class="text-white fs-2 fw-bold">Delete Category</h2>
+            </div>
+        </div>
+    </div>
+    <div class=" card-body p-4">
+        <form method="post">
+            <div class="border mt-3 p-5 shadow">
+                <div class="mb-4 input-wrapper">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-input mt-2" disabled />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3 input-wrapper">
+                    <label asp-for="DisplayOrder" class="form-label"></label>
+                    <input asp-for="DisplayOrder" class="form-input mt-2" readonly />
+                    <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-sm-6 col-8 mb-2 col-lg-3">
+                        <button type="submit" class="btn btn-danger form-control">Delete</button>
+                    </div>
+                    <div class="col-sm-6 col-8 col-lg-3">
+                        <a asp-controller="Category" asp-action="Index" class="form-control border btn btn-secondary px-2">Back To Main List</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
