@@ -1,20 +1,22 @@
-﻿using Book_Store_Data;
+﻿using Book_Store_Data.Repository.Interfaces;
 using Book_Store_Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-namespace Book_Store.Controllers
+namespace Book_Store.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
-        private readonly DataDbContext _dbContext;
-        public CategoryController(DataDbContext context)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            _dbContext = context;
+            _unitOfWork = unitOfWork;
         }
+
         public IActionResult Index()
         {
-            var categoriesData = _dbContext.Categories.ToList();
+            var categoriesData = _unitOfWork.categoryRepository.GetAll().ToList();
             return View(categoriesData);
 
         }
@@ -34,21 +36,22 @@ namespace Book_Store.Controllers
             }
             if (ModelState.IsValid)
             {
-                _dbContext.Categories.Add(category);
-                _dbContext.SaveChanges();
+                _unitOfWork.categoryRepository.Add(category);
+                _unitOfWork.Save();
                 TempData["success"] = "Category Created Successfully";
                 return RedirectToAction("Index");
             }
             return View(category);
         }
-        // Update 
+        // Update  [Get]
         public IActionResult Update(int? id)
         {
             if (id == 0 || id is null) return NotFound();
-            Category? categoryFromDb = _dbContext.Categories.Find(id);
+            Category? categoryFromDb = _unitOfWork.categoryRepository.Get(u => u.Id == id);
             if (categoryFromDb is null) return NotFound();
             return View(categoryFromDb);
         }
+        // Update  [Post]
         [HttpPost]
         public IActionResult Update(Category category)
         {
@@ -59,18 +62,18 @@ namespace Book_Store.Controllers
             }
             if (ModelState.IsValid)
             {
-                _dbContext.Categories.Update(category);
-                _dbContext.SaveChanges();
+                _unitOfWork.categoryRepository.Update(category);
+                _unitOfWork.Save();
                 TempData["success"] = "Category Upadated Successfully";
                 return RedirectToAction("Index");
             }
             return View(category);
         }
-        // Delete 
+        // Delete [Get]
         public IActionResult Delete(int? id)
         {
             if (id == 0 || id is null) return NotFound();
-            Category? categoryFromDb = _dbContext.Categories.Find(id);
+            Category? categoryFromDb = _unitOfWork.categoryRepository.Get(u => u.Id == id);
             if (categoryFromDb is null) return NotFound();
             return View(categoryFromDb);
         }
@@ -78,10 +81,10 @@ namespace Book_Store.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(int? id)
         {
-            Category? categoryFromDb = _dbContext.Categories.Find(id);
+            Category? categoryFromDb = _unitOfWork.categoryRepository.Get(u => u.Id == id);
             if (categoryFromDb is null) return NotFound();
-            _dbContext.Categories.Remove(categoryFromDb);
-            _dbContext.SaveChanges();
+            _unitOfWork.categoryRepository.Remove(categoryFromDb);
+            _unitOfWork.Save();
             TempData["success"] = "Category Removed Successfully";
             return RedirectToAction("Index");
 

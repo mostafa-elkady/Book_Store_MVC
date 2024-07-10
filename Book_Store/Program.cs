@@ -1,4 +1,6 @@
 using Book_Store_Data;
+using Book_Store_Data.Repository;
+using Book_Store_Data.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Book_Store
@@ -12,7 +14,8 @@ namespace Book_Store
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<DataDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+            // Allow Dependence Injection of Category Controller  in program file
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -32,7 +35,7 @@ namespace Book_Store
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }
